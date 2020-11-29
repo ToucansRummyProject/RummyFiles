@@ -1,0 +1,63 @@
+package toucansFinalProject;
+import java.util.ArrayList;
+import java.util.Collections;
+
+public class DeckOfCards {
+	private static final String[] faces = 
+		{"Ace", "Deuce", "Three", "Four", "Five", "Six", 
+				"Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"};
+	private static final String[] suits = 
+		{"Hearts", "Diamonds", "Clubs", "Spades"};
+
+	private static final int NUMBER_OF_CARDS = 52; // constant number of cards
+
+	private ArrayList<Card> deck= new ArrayList<Card>(); // array of Card objects
+
+
+	// constructor fills deck of cards
+	public DeckOfCards() {    
+		// populate deck with Card objects
+		for (int count = 0; count < NUMBER_OF_CARDS; count++) 
+			deck.add( new Card(count%13+1, faces[count % 13], suits[count / 13]));
+	} 
+
+	public String toString() {
+		int num=0;
+		String ans = "Your deck:  10 per line: \n";
+		for (int i=0; i<deck.size(); i++) {
+			ans = ans +deck.get(i).toString() + "  ";
+			num++;
+			if (num == 10) {
+				ans = ans + "\n";
+				num=0;
+			}
+		}
+		return "\n" + ans;
+	}
+
+	// shuffle deck of cards with one-pass algorithm
+	public void shuffle() {
+		Collections.shuffle(deck);
+	}
+	
+	public Card drawCard() {
+		return deck.remove(0);
+	}
+
+	public ArrayList<Card> getDeck() {
+		return deck;
+	}
+
+	public void setDeck(ArrayList<Card> deck) {
+		this.deck = deck;
+	} 
+
+	public Card getCard(int index) {
+		String f = deck.get(index).getFace();
+		String s = deck.get(index).getSuit();
+		int v = deck.get(index).getValue();
+		return new Card(v, f, s);
+	}
+
+
+}
