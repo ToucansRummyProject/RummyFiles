@@ -1,0 +1,49 @@
+package toucansFinalProject;
+
+
+public class Card {
+	private String face; // face of card
+	private String suit; // suit of card
+	private int value; // 1 to 13 for value
+
+	// constructor
+	public Card() {
+		
+	}
+	public Card(int num,String cardFace, String cardSuit) {
+
+		face = cardFace; // initialize face of card
+		suit = cardSuit; // initialize suit of card
+		value = num;
+	}
+
+	// return String representation of Card
+	public String toString() {
+		return value + ":" + face + " of " + suit;
+	}
+
+	public String getFace() {
+		return face;
+	}
+
+	public void setFace(String face) {
+		this.face = face;
+	}
+
+	public String getSuit() {
+		return suit;
+	}
+
+	public void setSuit(String suit) {
+		this.suit = suit;
+	}
+
+	public int getValue() {
+		return value;
+	}
+
+	public void setValue(int value) {
+		this.value = value;
+	}
+
+} // end class Card
