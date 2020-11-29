@@ -1,0 +1,60 @@
+package toucansFinalProject;
+
+import java.util.ArrayList;
+
+import toucansFinalProjectAG.Card;
+
+public class Hand {
+	private ArrayList<Card> cards;
+
+	public Hand() {
+
+	}
+
+	public Hand(ArrayList<Card> c) {
+		cards = c;
+	}
+
+	public String displayHand() {
+		String s = "";
+		for (int i = 0; i < cards.size(); i++)
+			s = s + cards.get(i).toString() + "  ";
+		s = s + "\n";
+		return s;
+	}
+
+	public void DiscardCard(int selection) {
+
+		cards.remove(selection);
+	}
+
+	public void drawCard(Card newCard) {
+		
+		cards.add(newCard);
+				
+	}
+	
+	public int getScore() {
+		int score = 0;
+		for (int i = 0; i < cards.size(); i++) {
+			if (cards.get(i).getValue() <= 10) {
+				score = score + cards.get(i).getValue();
+			} else {
+				score = score + 10;
+			}
+		}
+		return score;
+	}
+
+	public int getSize() {
+		return cards.size();
+	}
+
+	public ArrayList<Card> getCards() {
+		return cards;
+	}
+
+	public void setCards(ArrayList<Card> cards) {
+		this.cards = cards;
+	}
+}
