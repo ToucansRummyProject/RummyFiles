@@ -1,0 +1,35 @@
+package toucansFinalProject;
+
+import java.util.ArrayList;
+// a set is at least 3 of one card, once it hits 4 cards it is closed
+// a set is a set and cannot involve cards that are in a run
+public class Set {
+	private ArrayList<Card> setOfCards = new ArrayList<Card>();
+	
+	public Set() {
+		
+	}
+
+	public Set(ArrayList<Card> setOfCards) {
+		super();
+		this.setOfCards = setOfCards;
+	}
+	
+	public String toString() {
+		String listOfCards=" ";
+		for(int i=0; i<setOfCards.size();i++) {
+			listOfCards = listOfCards + setOfCards.get(i).toString() + " ";
+		}
+		return listOfCards;
+	}
+
+	public ArrayList<Card> getSetOfCards() {
+		return setOfCards;
+	}
+
+	public void setSetOfCards(ArrayList<Card> setOfCards) {
+		this.setOfCards = setOfCards;
+	}
+	
+		
+}
