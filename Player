@@ -1,0 +1,57 @@
+package toucansFinalProject;
+
+import java.text.NumberFormat;
+
+
+
+public class Player {
+	private String name;
+	private Hand hand;
+	private double amtMoney;
+
+	public Player() {
+
+	}
+	
+	public Player(String n, double m) {
+		name=n;
+		amtMoney=m;
+	}
+
+	public Player(String n, Hand h, double m) {
+		name = n;
+		hand = h;
+		amtMoney = m;
+
+	}
+
+	public String displayPlayer() {
+		NumberFormat nf = NumberFormat.getCurrencyInstance();
+		return name + " has " + nf.format(amtMoney) + " money.  Their hand is: " + hand.displayHand();
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Hand getHand() {
+		return hand;
+	}
+
+	public void setHand(Hand hand) {
+		this.hand = hand;
+	}
+
+	public double getAmtMoney() {
+		return amtMoney;
+	}
+
+	public void setAmtMoney(double amtMoney) {
+		this.amtMoney = amtMoney;
+	}
+
+}
