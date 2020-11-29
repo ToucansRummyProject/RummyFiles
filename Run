@@ -1,0 +1,36 @@
+package toucansFinalProject;
+
+import java.util.ArrayList;
+// a run is a group of three consecutive cards of the same suit
+// a run is a run and cannot include cards from a set
+
+public class Run {
+	private ArrayList<Card> runOfCards;
+	
+	public Run() {
+		
+	}
+
+	public Run(ArrayList<Card> runOfCards) {
+		super();
+		this.runOfCards = runOfCards;
+	}
+	
+	public String toString() {
+		String listOfCards=" ";
+		for(int i=0; i<runOfCards.size();i++) {
+			listOfCards = listOfCards + runOfCards.get(i).toString() + " ";
+		}
+		return listOfCards;
+	}
+
+	public ArrayList<Card> getRunOfCards() {
+		return runOfCards;
+	}
+
+	public void setRunOfCards(ArrayList<Card> runOfCards) {
+		this.runOfCards = runOfCards;
+	}
+	
+		
+}
