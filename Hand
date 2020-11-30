@@ -2,8 +2,6 @@ package toucansFinalProject;
 
 import java.util.ArrayList;
 
-import toucansFinalProjectAG.Card;
-
 public class Hand {
 	private ArrayList<Card> cards;
 
@@ -20,6 +18,14 @@ public class Hand {
 		for (int i = 0; i < cards.size(); i++)
 			s = s + cards.get(i).toString() + "  ";
 		s = s + "\n";
+		return s;
+	}
+	//Gabe - added this to label cards easily
+	public String displayHandNumber() {
+		String s = "";
+		for (int i = 0; i < cards.size(); i++)
+			s = s + (i + 1) + ". " + cards.get(i).toString() + "\n";
+		s = s;
 		return s;
 	}
 
