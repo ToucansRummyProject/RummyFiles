@@ -1,21 +1,20 @@
 package toucansFinalProject;
 
-import java.util.ArrayList;
-import java.util.Scanner;
-
-import toucansFinalProjectAG.Card;
-import toucansFinalProjectAG.DeckOfCards;
+import java.util.*;
 
 // NOTES: I have assigned the methods. I thought it best to break them into: 
 // DECK/HAND MECHANICS: ALEX
 // SCORING/WINNING/GAMEFLOW: WILL
 // GAMEPLAY/LOGIC/GUI: GABRIEL
-// DISCARDING/END OF TURN: Jonathan
-// I created th Run and Set classes. I expect they will need methods for the GAMEPLAY/LOGIC piece
+// DISCARDING/END OF TURN: JONATHAN
+// I created the Run and Set classes. I expect they will need methods for the GAMEPLAY/LOGIC piece
+
+//Gabe- I fixed part of the code so I could test my code, I made notes next to what I changed/fixed
 
 public class PlayCards {
 
 	public static void main(String[] args) {
+		
 		Scanner scan = new Scanner(System.in);
 		ArrayList<Player> players = new ArrayList<Player>();
 
@@ -28,15 +27,20 @@ public class PlayCards {
 		}
 		boolean more = true;
 
-		while (more) {
+		while (more) {//base game while loop
 
 			System.out.println("How many players will be playing this game (2-6)?");
 			int numPlay = scan.nextInt();
+			
 			getNames(numPlay, players);
 			// send the numPlayers to a method to determine amount of cards to be dealt DONE
 			// based on # of players DONE
 			int numCards = handSize(numPlay);
 
+			//create runs/sets decks, for Gabe code
+			ArrayList<Run> runs = new ArrayList<Run>();
+			ArrayList<Set> sets = new ArrayList<Set>();
+			
 			// create a deck of cards DONE
 			DeckOfCards deck = newDeck();
 
@@ -52,19 +56,20 @@ public class PlayCards {
 			ArrayList<Card> temp = new ArrayList<Card>();
 			temp.add(top);
 			discard.setDeck(temp);
-
+			
 			System.out.println("How many points would you like to play to? ");
 			int points = scan.nextInt();
+			
 			// set points for game DONE
-			while (points < highScore(players)) {
+			while (points > highScore(players)) {
 				boolean cardsInHand = true;
 				while (cardsInHand) {
 
 					for (int i = 0; i < players.size(); i++) {
-						if (cardsInHand == false) {
+						if (cardsInHand == true) {//Gabe- changed this to true- it was a syntax error
 							Player currentPlayer = players.get(i);
 							int selection = 0;
-							while (selection != 1 || selection != 2) {
+							while (selection != 1 && selection != 2) {//Gabe- switched your or to an and otherwise this was an infinite loop
 								selection = menuPhase1(currentPlayer);
 								if (selection == 1) {
 									// if deck is out of cards reshuffle all but top card of discard pile into new
@@ -91,11 +96,7 @@ public class PlayCards {
 										Card newCard = deck.drawCard();
 										currentPlayer.getHand().drawCard(newCard);
 										
-										// discard
-										int discardSelection = scan.nextInt();
-										Card discardCard = currentPlayer.getHand().getCards().get(discardSelection);
-										currentPlayer.getHand().DiscardCard(discardSelection);
-										discard.getDeck().add(discardCard);
+										//Gabe - moved the 'discard' code since it should be in menu three, to line: 178
 									}
 									
 								
@@ -110,6 +111,7 @@ public class PlayCards {
 									System.out.println(currentPlayer.getHand().displayHand());
 								} else if (selection == 4) {
 									// display sets/runs played on table #5PC_GABRIEL
+									displayRunsSets(runs, sets);
 								} else if (selection == 5) {
 									System.out.println("Thanks for playing Toucan's Rummy!");
 									System.exit(0);
@@ -117,7 +119,7 @@ public class PlayCards {
 									System.out.println("Please pick an option 1-5)...");
 								}
 
-							}
+							}//end of menu 1 while loop
 							int selection2 = 0;
 							while (selection2 != 4) {
 								selection2 = menuPhase2();
@@ -128,7 +130,9 @@ public class PlayCards {
 									// into existing set #8PC_GABRIEL
 									// new run #9PC_GABRIEL
 									// new set #10PC_GABRIEL
-
+									potentialRunSet(currentPlayer, runs, sets);
+									
+									
 									// check if hand = 0 player won round #11PC_WILL DONE
 									if (currentPlayer.getHand().getSize() == 0) {
 										for (int j = 0; j < players.size(); j++) {
@@ -148,6 +152,7 @@ public class PlayCards {
 									System.out.println(currentPlayer.getHand().displayHand());
 								} else if (selection2 == 3) {
 									// display sets/runs played on table #5PC_GABRIEL
+									displayRunsSets(runs, sets);
 								} else if (selection2 == 4) {
 									// done 4 ENDS WHILE LOOP
 								} else if (selection2 == 5) {
@@ -156,19 +161,43 @@ public class PlayCards {
 								} else {
 									System.out.println("Please pick an option 1-5)...");
 								}
-							}
+							}//end of menu 2 while loop
 							int selection3 = 0;
 							while (selection3 != 1) {
 								selection3 = menuPhase3();
 								if (selection3 == 1) {
+									boolean invalidAns = true;
 									// allow the player to select a card and discard it to the discard pile
 									// #15PC_Jonathan
 									// check VS Card drawn tracked in item #4PC_Jonathan
 									// pass to next player DONE: HANDLED BY WHILE LOOP ENDING AT 1
+									//Gabe- Moved discard code here, be sure to add a sysout to prompt the user
+									//Gabe- you can reference my code in setAndRun if you want a good idea to select a card be sure to use try/catches
+									//Gabe- added a menu to see how to select a card, added a try catch, note there is a bug in the selection process, but I just wanted to make it runnable for now, so I could test my code
+									while(invalidAns) {
+										System.out.println("Type the number next to the card you wish to discard:\n");
+										System.out.println(currentPlayer.getHand().displayHandNumber());
+										System.out.println("\nType the number here:");
+										// discard
+										try{
+											int discardSelection = scan.nextInt();
+											//Gabe- add if statement to check if answer was in range.
+											if(discardSelection > 0 && discardSelection <= currentPlayer.getHand().getCards().size()) {
+												Card discardCard = currentPlayer.getHand().getCards().get(discardSelection);
+												currentPlayer.getHand().DiscardCard(discardSelection);
+												discard.getDeck().add(discardCard);
+												invalidAns = false;//added to stop the loop
+											}
+										} catch(InputMismatchException e) {
+											System.out.println("Invalid input enter an integer for one of the cards.");
+											scan.nextLine();//to fix bugs
+										}
+									}
 								} else if (selection3 == 2) {
 									System.out.println(currentPlayer.getHand().displayHand());
 								} else if (selection2 == 3) {
 									// display sets/runs played on table #5PC_GABRIEL
+									displayRunsSets(runs, sets);
 								} else if (selection2 == 4) {
 									System.out.println("Thanks for playing Toucan's Rummy!");
 									System.exit(0);
@@ -177,21 +206,21 @@ public class PlayCards {
 								}
 
 							}
-						}
+						}//if cards in hand
 					}
 
-				}
+				}//end of cards in hand while
 			}
 			Player winner = winningPlayer(players);			
-			System.out.println("The winner of that round was "+winner.getName()+" with a total of $"
+			System.out.println("The winner of that round was "+ winner.getName()+" with a total of $"
 					+winner.getAmtMoney());
 			System.out.println("Play again (true/false)? ");
 			more = scan.nextBoolean();
-			scan.close();
+			//Gabe - moved this scan.close() to right after the 'thanks for playing' text, for it creates more bugs here
 
-		}
+		}//end of base game while loop
 		System.out.println("Thanks for playing Toucan's Rummy!");
-
+		scan.close();
 	}
 
 	public static void getNames(int c, ArrayList<Player> p) {
@@ -204,7 +233,7 @@ public class PlayCards {
 			p.add(player);
 
 		}
-		scan.close();
+		//Gabe - got rid of scan.close() it created syntax errors
 	}
 
 	public static int handSize(int nP) {
@@ -251,7 +280,7 @@ public class PlayCards {
 		System.out.println("5. Exit game");
 		System.out.println("\nWhich option would like?");
 		selection = scan.nextInt();
-		scan.close();
+		//Gabe - removed scan.close() for it creates errors here
 		return selection;
 	}
 
@@ -266,7 +295,7 @@ public class PlayCards {
 		System.out.println("5. Exit game");
 		System.out.println("\nWhich option would like?");
 		selection = scan.nextInt();
-		scan.close();
+		//Gabe- got rid of another scan.close() that was creating bugs
 		return selection;
 	}
 
@@ -280,7 +309,7 @@ public class PlayCards {
 		System.out.println("5. Exit game");
 		System.out.println("\nWhich option would like?");
 		selection = scan.nextInt();
-		scan.close();
+		//Gabe - got rid of another scan.close() that was creating bugs
 		return selection;
 	}
 
@@ -305,4 +334,89 @@ public class PlayCards {
 
 	}
 
-}
+	public static void displayRunsSets(ArrayList<Run> runs, ArrayList<Set> sets) {//#5PC_GABRIEL
+		//Variable declaration
+		int index = 0;
+		
+		System.out.println("Runs: ");
+		for(Run r: runs) {
+			index++;
+			System.out.println("Run " + index + ": \n" + r.toString());
+		}
+		index = 0;
+		
+		System.out.println("Sets: ");
+		for(Set s: sets) {
+			index++;
+			System.out.println("Set " + index + ": \n" + s.toString());
+		}
+	
+	}
+	
+	public static void potentialRunSet(Player currentPlayer, ArrayList<Run> runs, ArrayList<Set> sets) {//Guides player to make a set/run, if possible
+		//Variable Declaration
+		Hand playerHand = currentPlayer.getHand();
+		Hand potentialRS = new Hand(new ArrayList<Card>());
+		int choice = 0;
+		
+		while(choice != 7) {
+			choice = potentialRSMenu(potentialRS);
+			
+			switch(choice) 
+			{
+				case 1://select cards
+					potentialRS = setAndRun.selectCards(playerHand, potentialRS);
+					break;
+				case 2://deselect cards
+					potentialRS = setAndRun.deselectCards(playerHand, potentialRS);
+					break;
+				case 3://make a set
+					setAndRun.makeSet(potentialRS, sets, playerHand);
+					break;
+				case 4://make a run
+					setAndRun.makeRun(potentialRS, runs, playerHand);
+					break;
+				case 5://add to a set
+					setAndRun.addSet(potentialRS, sets, playerHand);
+					break;
+				case 6://add to a run
+					setAndRun.addRun(potentialRS, runs, playerHand);
+					break;
+				case 7://return to previous menu
+					//will finish and return to last menu due how the loop is set up
+					break;
+			}//end of switch
+		}//end of while loop
+	}//end of method
+	
+	public static int potentialRSMenu(Hand potentialRS) {//Displays menu for potential runs and sets and returns a valid response
+		int choice;
+		Scanner scan = new Scanner(System.in);
+		
+		while(true) {
+			try {
+				System.out.println("\nIn order to perform a run or set first select the card(s) you'd like to use."
+						+ "\n1. Select Cards" 
+						+ "\n2. Return Cards to hand" 
+						+ "\n3. Make a Set" 
+						+ "\n4. Make a Run"
+						+ "\n5. Add to a Set " 
+						+ "\n6. Add to a Run" 
+						+ "\n7. Finish"
+						+ "\n\nThese are the cards you have selected:\n " + potentialRS.displayHand());
+				choice = scan.nextInt();
+				
+				if(choice >= 1 && choice <= 7) {//if its a valid choice
+					scan.nextLine();//Fixes any potential bugs
+					return choice;
+				} else {
+					System.out.println("Invalid Answer, the integer must be between 1-7.");
+				}
+			}//end of try
+			catch(InputMismatchException e) {
+				System.out.println("Invalid Answer, input an integer between 1-7.");
+				scan.nextLine();
+			}
+		} //end of while
+	}//end of method
+}//end of class
